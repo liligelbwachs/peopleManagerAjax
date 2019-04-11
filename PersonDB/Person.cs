@@ -13,7 +13,6 @@ namespace PersonDB
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Age { get; set; }
-        public int bleh { get; set; }
     }
 
     public class PeopleManager
