@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PersonDB;
 
 namespace Json_Person_Manager.Controllers
 {
@@ -13,18 +14,47 @@ namespace Json_Person_Manager.Controllers
             return View();
         }
 
-        public ActionResult About()
+        [HttpPost]
+        public void Add(string firstName, string lastName, int age)
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            PeopleManager mgr = new PeopleManager(Properties.Settings.Default.ConStr);
+            mgr.AddPerson(firstName, lastName,age);
+           
         }
 
-        public ActionResult Contact()
+        [HttpPost]
+        public ActionResult GetAll()
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            PeopleManager mgr = new PeopleManager(Properties.Settings.Default.ConStr);
+            IEnumerable<Person> ppl = mgr.GetAllPeople();
+            return Json(ppl);
         }
+
+        public ActionResult EditPerson(int? id)
+        {
+            //if (!id.HasValue)
+            //{
+            //    return Redirect("/people/showpeople");
+            //}
+            PeopleManager mgr = new PeopleManager(Properties.Settings.Default.ConStr);
+            Person person = mgr.SelectPerson(id);
+            return Json(person);
+        }
+
+        public void Delete(int Id)
+        {
+            PeopleManager mgr = new PeopleManager(Properties.Settings.Default.ConStr);
+            mgr.DeletePerson(Id);
+
+        }
+
+        [HttpPost]
+        public void Update(string firstName, string lastName, int age, int id)
+        {
+            PeopleManager mgr = new PeopleManager(Properties.Settings.Default.ConStr);
+            mgr.EditPerson(firstName,lastName,age,id);
+            
+        }
+
     }
 }
